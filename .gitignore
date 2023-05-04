@@ -1,0 +1,31 @@
+# IDE
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+
+# go
+vendor/
+
+# dev
+__debug_bin
+.env
+testdata/minio/*
+!testdata/minio/bucket
+testdata/minio/bucket/*
+!testdata/minio/bucket/.gitkeep
+
+# goreleaser
+dist/
+
+# node
+node_modules/
+
+# remix
+.cache/
+build/
+
+# helm
+tmpcharts/
+charts/**/charts/

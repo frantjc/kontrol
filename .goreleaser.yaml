@@ -1,0 +1,54 @@
+builds:
+  - id: kontrol
+    binary: kontrol
+    main: ./cmd/kontrol
+    ldflags:
+      - -s -w -X github.com/frantjc/kontrol.Semver={{ .Version }}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+    hooks:
+      post:
+        - upx {{ .Path }}
+  - id: kontroller
+    binary: kontroller
+    main: ./cmd/kontroller
+    ldflags:
+      - -s -w -X github.com/frantjc/kontrol.Semver={{ .Version }}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+    hooks:
+      post:
+        - upx {{ .Path }}
+dockers:
+  - image_templates:
+      - ghcr.io/frantjc/kontrol:{{ .Version }}
+      - ghcr.io/frantjc/kontrol:{{ .Major }}.{{ .Minor }}
+      - ghcr.io/frantjc/kontrol:{{ .Major }}
+      - ghcr.io/frantjc/kontrol:latest
+changelog:
+  use: github
+  filters:
+    exclude:
+      - merge conflict
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+brews:
+  - tap:
+      owner: frantjc
+      name: homebrew-tap
+    folder: Formula
+    skip_upload: auto
+    homepage:  https://github.com/frantjc/kontrol
+    # description: TODO
+    # license: MIT
+    test: |
+      system "#{bin}/kontrol --version"
