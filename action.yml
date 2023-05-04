@@ -1,0 +1,10 @@
+name: Setup Kontrol
+description: |
+  Use Kontrol to package or deploy Kubernetes controllers.
+author: frantjc
+branding:
+  color: yellow
+  icon: box
+runs:
+  using: node16
+  main: .github/action/dist/index.js
