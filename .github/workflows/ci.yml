@@ -11,9 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: .github/action/yarn.lock
       - uses: actions/setup-go@v4
         with:
           go-version: "1.20"
       - uses: golangci/golangci-lint-action@v3.4.0
+      - name: Run yarn
+        run: |
+          cd .github/action
+          yarn
       - run: make test
       - uses: ./
