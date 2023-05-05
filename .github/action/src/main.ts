@@ -66,34 +66,29 @@ async function run(): Promise<void> {
       throw new Error(`unsupported OS ${process.env.RUNNER_OS}`);
     }
 
-    // Default to looking it up on PATH if install is explicitly set to false.
-    let kontrol = "";
-    if (core.getBooleanInput("install")) {
-      core.startGroup("install");
+    core.startGroup("install");
+    // Look for kontrol in the cache.
+    let kontrol = tc.find(tool, versionOs);
 
-      // Look for kontrol in the cache.
-      kontrol = tc.find(tool, versionOs);
-
-      // If we don't find kontrol in the cache, download, extract and cache it
-      // from its GitHub release.
-      if (!kontrol) {
-        kontrol = await tc.cacheFile(
-          path.join(
-            await tc.extractTar(
-              await tc.downloadTool(
-                `https://github.com/frantjc/kontrol/releases/download/v${version}/kontrol_${version}_${os}_${arch}.tar.gz`
-              )
-            ),
-            tool
+    // If we don't find kontrol in the cache, download, extract and cache it
+    // from its GitHub release.
+    if (!kontrol) {
+      kontrol = await tc.cacheFile(
+        path.join(
+          await tc.extractTar(
+            await tc.downloadTool(
+              `https://github.com/frantjc/kontrol/releases/download/v${version}/kontrol_${version}_${os}_${arch}.tar.gz`
+            )
           ),
-          tool,
-          tool,
-          versionOs
-        );
-      }
-
-      core.endGroup();
+          tool
+        ),
+        tool,
+        tool,
+        versionOs
+      );
     }
+
+    core.endGroup();
 
     kontrol = path.join(kontrol, "kontrol");
 

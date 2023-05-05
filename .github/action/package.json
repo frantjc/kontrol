@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "all": "npm-run-all fmt test build",
+    "all": "npm-run-all fmt test",
     "fmt": "npm-run-all fmt:*",
     "fmt:eslint": "eslint --fix",
     "fmt:pretty": "prettier --write .",

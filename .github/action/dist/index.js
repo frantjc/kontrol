@@ -99,19 +99,15 @@ function run() {
             if (!goreleaserYML.builds[0].goos.includes(os)) {
                 throw new Error(`unsupported OS ${process.env.RUNNER_OS}`);
             }
-            // Default to looking it up on PATH if install is explicitly set to false.
-            let kontrol = "";
-            if (core.getBooleanInput("install")) {
-                core.startGroup("install");
-                // Look for kontrol in the cache.
-                kontrol = tc.find(tool, versionOs);
-                // If we don't find kontrol in the cache, download, extract and cache it
-                // from its GitHub release.
-                if (!kontrol) {
-                    kontrol = yield tc.cacheFile(path_1.default.join(yield tc.extractTar(yield tc.downloadTool(`https://github.com/frantjc/kontrol/releases/download/v${version}/kontrol_${version}_${os}_${arch}.tar.gz`)), tool), tool, tool, versionOs);
-                }
-                core.endGroup();
+            core.startGroup("install");
+            // Look for kontrol in the cache.
+            let kontrol = tc.find(tool, versionOs);
+            // If we don't find kontrol in the cache, download, extract and cache it
+            // from its GitHub release.
+            if (!kontrol) {
+                kontrol = yield tc.cacheFile(path_1.default.join(yield tc.extractTar(yield tc.downloadTool(`https://github.com/frantjc/kontrol/releases/download/v${version}/kontrol_${version}_${os}_${arch}.tar.gz`)), tool), tool, tool, versionOs);
             }
+            core.endGroup();
             kontrol = path_1.default.join(kontrol, "kontrol");
             // Sanity check that kontrol was installed correctly.
             yield cp.exec(kontrol, ["-v"]);
