@@ -9,9 +9,17 @@ rules:
   - ""
   resources:
   - events
+  - namespaces
   - pods
+  - serviceaccounts
   - services
   - services/finalizers
+  verbs:
+  - '*'
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
   verbs:
   - '*'
 - apiGroups:
@@ -19,5 +27,14 @@ rules:
   resources:
   - deployments
   - replicasets
+  verbs:
+  - '*'
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterrolebindings
+  - clusterroles
+  - rolebindings
+  - roles
   verbs:
   - '*'

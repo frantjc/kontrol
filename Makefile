@@ -4,18 +4,14 @@ GOLANGCI-LINT = golangci-lint
 GORELEASER = goreleaser
 CONTROLLER-GEN = controller-gen
 YARN = yarn
+INSTALL ?= sudo install
 
 BIN ?= /usr/local/bin
 
+GOOS = $(shell $(GO) env GOOS)
+GOARCH = $(shell $(GO) env GOARCH)
+
 SEMVER ?= 0.1.0
-
-.DEFAULT: install
-
-install: build
-	@$(INSTALL) ./dist/kontrol_$(GOOS)_$(GOARCH)*/kontrol $(BIN)
-
-build:
-	@$(GORELEASER) release --snapshot --clean
 
 .github/action:
 	@cd .github/action && $(YARN) all
@@ -47,6 +43,7 @@ MINOR = $(word 2,$(subst ., ,$(SEMVER)))
 release:
 	@cd .github/action && \
 		$(YARN) version --new-version $(SEMVER)
+	@$(GIT) push
 	@$(GIT) tag -f v$(MAJOR)
 	@$(GIT) tag -f v$(MAJOR).$(MINOR)
 	@$(GIT) push --tags -f

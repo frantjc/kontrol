@@ -1,8 +1,7 @@
 {
-  "name": "forge-action",
-  "version": "0.7.3",
+  "name": "setup-kontrol",
+  "version": "0.1.0",
   "private": true,
-  "description": "forge action",
   "scripts": {
     "all": "npm-run-all fmt test build",
     "fmt": "npm-run-all fmt:*",
@@ -16,10 +15,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/frantjc/forge.git"
+    "url": "git+https://github.com/frantjc/kontrol.git"
   },
   "author": "frantjc",
-  "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",

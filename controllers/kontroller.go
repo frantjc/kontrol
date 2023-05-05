@@ -40,8 +40,10 @@ type KontrollerReconciler struct {
 	Logger logr.Logger
 }
 
-//+kubebuilder:rbac:groups="",resources=events;pods;services;services/finalizers,verbs=*
+//+kubebuilder:rbac:groups="",resources=events;pods;namespaces;serviceaccounts;services;services/finalizers,verbs=*
 //+kubebuilder:rbac:groups=apps,resources=deployments;replicasets,verbs=*
+//+kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterroles;clusterrolebindings;roles;rolebindings,verbs=*
+//+kubebuilder:rbac:groups=apiextensions.k8s.io,resources=customresourcedefinitions,verbs=*
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
