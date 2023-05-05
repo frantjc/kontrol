@@ -5,6 +5,14 @@ author: frantjc
 branding:
   color: yellow
   icon: box
+inputs:
+  version:
+    description: |
+      Version of Kontrol to install.
+  install:
+    description: |
+      Whether or not to install Kontrol.
+    default: true
 runs:
   using: node16
   main: .github/action/dist/index.js

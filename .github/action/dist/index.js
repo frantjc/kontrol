@@ -54,7 +54,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const tool = "kontrol";
-            const version = package_json_1.default.version;
+            const version = core.getInput("version") || package_json_1.default.version;
             // Turn RUNNER_ARCH into GOARCH.
             let arch;
             switch (process.env.RUNNER_ARCH) {
@@ -99,15 +99,19 @@ function run() {
             if (!goreleaserYML.builds[0].goos.includes(os)) {
                 throw new Error(`unsupported OS ${process.env.RUNNER_OS}`);
             }
-            core.startGroup("install");
-            // Look for kontrol in the cache.
-            let kontrol = tc.find(tool, versionOs);
-            // If we don't find kontrol in the cache, download, extract and cache it
-            // from its GitHub release.
-            if (!kontrol) {
-                kontrol = yield tc.cacheFile(path_1.default.join(yield tc.extractTar(yield tc.downloadTool(`https://github.com/frantjc/kontrol/releases/download/v${version}/kontrol_${version}_${os}_${arch}.tar.gz`)), tool), tool, tool, versionOs);
+            // Default to looking it up on PATH if install is explicitly set to false.
+            let kontrol = "";
+            if (core.getBooleanInput("install")) {
+                core.startGroup("install");
+                // Look for kontrol in the cache.
+                let kontrol = tc.find(tool, versionOs);
+                // If we don't find kontrol in the cache, download, extract and cache it
+                // from its GitHub release.
+                if (!kontrol) {
+                    kontrol = yield tc.cacheFile(path_1.default.join(yield tc.extractTar(yield tc.downloadTool(`https://github.com/frantjc/kontrol/releases/download/v${version}/kontrol_${version}_${os}_${arch}.tar.gz`)), tool), tool, tool, versionOs);
+                }
+                core.endGroup();
             }
-            core.endGroup();
             kontrol = path_1.default.join(kontrol, "kontrol");
             // Sanity check that kontrol was installed correctly.
             yield cp.exec(kontrol, ["-v"]);
@@ -15094,7 +15098,7 @@ exports.visitAsync = visitAsync;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"setup-kontrol","version":"0.1.0","private":true,"scripts":{"all":"npm-run-all fmt test build","fmt":"npm-run-all fmt:*","fmt:eslint":"eslint --fix","fmt:pretty":"prettier --write .","test":"npm-run-all build test:jest","test:jest":"jest","build":"npm-run-all build:tsc build:ncc","build:tsc":"tsc","build:ncc":"ncc build ./lib/src/main.js --source-map --license licenses.txt"},"repository":{"type":"git","url":"git+https://github.com/frantjc/kontrol.git"},"author":"frantjc","dependencies":{"@actions/core":"^1.10.0","@actions/exec":"^1.1.1","@actions/tool-cache":"^2.0.1","yaml":"^2.2.2"},"devDependencies":{"@types/node":"^18.15.13","@typescript-eslint/parser":"^5.59.2","@vercel/ncc":"^0.36.1","eslint":"^8.38.0","eslint-plugin-github":"^4.7.0","eslint-plugin-jest":"^27.2.1","jest":"^29.5.0","js-yaml":"^4.1.0","npm-run-all":"^4.1.5","prettier":"^2.8.7","ts-jest":"^29.1.0","typescript":"^5.0.4"},"engines":{"node":">=16.0.0"}}');
+module.exports = JSON.parse('{"name":"setup-kontrol","version":"0.1.0","private":true,"scripts":{"all":"npm-run-all fmt test","fmt":"npm-run-all fmt:*","fmt:eslint":"eslint --fix","fmt:pretty":"prettier --write .","test":"npm-run-all build test:jest","test:jest":"jest","build":"npm-run-all build:tsc build:ncc","build:tsc":"tsc","build:ncc":"ncc build ./lib/src/main.js --source-map --license licenses.txt"},"repository":{"type":"git","url":"git+https://github.com/frantjc/kontrol.git"},"author":"frantjc","dependencies":{"@actions/core":"^1.10.0","@actions/exec":"^1.1.1","@actions/tool-cache":"^2.0.1","yaml":"^2.2.2"},"devDependencies":{"@types/node":"^18.15.13","@typescript-eslint/parser":"^5.59.2","@vercel/ncc":"^0.36.1","eslint":"^8.38.0","eslint-plugin-github":"^4.7.0","eslint-plugin-jest":"^27.2.1","jest":"^29.5.0","js-yaml":"^4.1.0","npm-run-all":"^4.1.5","prettier":"^2.8.7","ts-jest":"^29.1.0","typescript":"^5.0.4"},"engines":{"node":">=16.0.0"}}');
 
 /***/ })
 
