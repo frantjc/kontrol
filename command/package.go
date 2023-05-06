@@ -148,6 +148,7 @@ func NewPackage() *cobra.Command {
 	_ = cmd.MarkFlagFilename("role", "yaml", "yml")
 	cmd.Flags().StringSliceVar(&rules, "rule", nil, "Extra rules for the controller")
 	cmd.Flags().Int32SliceVarP(&containerPorts, "port", "p", nil, "Ports that the controller binds to")
+	cmd.MarkFlagRequired("port")
 	cmd.Flags().StringVar(&commandStr, "cmd", "", "Command for the controller")
 	cmd.Flags().StringVar(&argsStr, "args", "", "Args for the controller")
 

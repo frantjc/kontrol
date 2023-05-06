@@ -45,7 +45,8 @@ artifacts.filter(artifact => artifact.type === "Docker Image").forEach(async art
                 "package",
                 artifact.name,
                 "--crds", path.join(__dirname, "../../manifests/frantj.cc_kontrollers.yaml"),
-                "--roles", path.join(__dirname, "../../manifests/role.yaml")
+                "--roles", path.join(__dirname, "../../manifests/role.yaml"),
+                "--port", "8080"
             ],
             {
                 stdio: 'inherit'
