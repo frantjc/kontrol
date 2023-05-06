@@ -11,7 +11,7 @@ BIN ?= /usr/local/bin
 GOOS = $(shell $(GO) env GOOS)
 GOARCH = $(shell $(GO) env GOARCH)
 
-SEMVER ?= 0.1.0
+SEMVER ?= 0.1.1
 
 .github/action:
 	@cd .github/action && $(YARN) all
