@@ -100,21 +100,21 @@ function run() {
                 throw new Error(`unsupported OS ${process.env.RUNNER_OS}`);
             }
             // Default to looking it up on PATH if install is explicitly set to false.
-            let kontrol = "kontrol";
+            let bin = tool;
             if (core.getBooleanInput("install")) {
                 core.startGroup("install");
                 // Look for kontrol in the cache.
-                let kontrol = tc.find(tool, versionOs);
+                let bin = path_1.default.join(tc.find(tool, versionOs), tool);
                 // If we don't find kontrol in the cache, download, extract and cache it
                 // from its GitHub release.
-                if (!kontrol) {
-                    kontrol = yield tc.cacheFile(path_1.default.join(yield tc.extractTar(yield tc.downloadTool(`https://github.com/frantjc/kontrol/releases/download/v${version}/kontrol_${version}_${os}_${arch}.tar.gz`)), tool), tool, tool, versionOs);
+                if (!bin) {
+                    bin = path_1.default.join(yield tc.cacheFile(path_1.default.join(yield tc.extractTar(yield tc.downloadTool(`https://github.com/frantjc/${tool}/releases/download/v${version}/${tool}_${version}_${os}_${arch}.tar.gz`)), tool), tool, tool, versionOs), tool);
                 }
-                core.addPath(kontrol);
+                core.addPath(bin);
                 core.endGroup();
             }
             // Sanity check that kontrol was installed correctly.
-            yield cp.exec(kontrol, ["-v"]);
+            yield cp.exec(bin, ["-v"]);
         }
         catch (err) {
             if (typeof err === "string" || err instanceof Error)

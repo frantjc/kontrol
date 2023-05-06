@@ -67,38 +67,41 @@ async function run(): Promise<void> {
     }
 
     // Default to looking it up on PATH if install is explicitly set to false.
-    let kontrol = "kontrol";
+    let bin = tool;
     if (core.getBooleanInput("install")) {
       core.startGroup("install");
 
       // Look for kontrol in the cache.
-      let kontrol = tc.find(tool, versionOs);
+      let bin = path.join(tc.find(tool, versionOs), tool);
 
       // If we don't find kontrol in the cache, download, extract and cache it
       // from its GitHub release.
-      if (!kontrol) {
-        kontrol = await tc.cacheFile(
-          path.join(
-            await tc.extractTar(
-              await tc.downloadTool(
-                `https://github.com/frantjc/kontrol/releases/download/v${version}/kontrol_${version}_${os}_${arch}.tar.gz`
-              )
+      if (!bin) {
+        bin = path.join(
+          await tc.cacheFile(
+            path.join(
+              await tc.extractTar(
+                await tc.downloadTool(
+                  `https://github.com/frantjc/${tool}/releases/download/v${version}/${tool}_${version}_${os}_${arch}.tar.gz`
+                )
+              ),
+              tool
             ),
-            tool
+            tool,
+            tool,
+            versionOs
           ),
-          tool,
-          tool,
-          versionOs
+          tool
         );
       }
 
-      core.addPath(kontrol);
+      core.addPath(bin);
 
       core.endGroup();
     }
 
     // Sanity check that kontrol was installed correctly.
-    await cp.exec(kontrol, ["-v"]);
+    await cp.exec(bin, ["-v"]);
   } catch (err) {
     if (typeof err === "string" || err instanceof Error) core.setFailed(err);
   }
