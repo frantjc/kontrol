@@ -43,7 +43,7 @@ afterEach(() => {
   fs.rmSync(env.RUNNER_TOOL_CACHE, { recursive: true });
 });
 
-test("run install", () => {
+test("action", () => {
   expect(
     cp
       .execFileSync(
@@ -55,6 +55,7 @@ test("run install", () => {
             ...env,
             INPUT_INSTALL: "true",
           },
+          stdio: "inherit",
         }
       )
       .toString()

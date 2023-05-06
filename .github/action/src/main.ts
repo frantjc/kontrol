@@ -70,7 +70,6 @@ async function run(): Promise<void> {
     let kontrol = "kontrol";
     if (core.getBooleanInput("install")) {
       core.startGroup("install");
-      core.info(`looking for ${tool} in cache`);
 
       // Look for kontrol in the cache.
       let kontrol = tc.find(tool, versionOs);
@@ -78,9 +77,6 @@ async function run(): Promise<void> {
       // If we don't find kontrol in the cache, download, extract and cache it
       // from its GitHub release.
       if (!kontrol) {
-        core.info(`${tool} not found in cache for ${versionOs}`);
-        core.info(`downloading ${tool} for ${versionOs}`);
-
         kontrol = await tc.cacheFile(
           path.join(
             await tc.extractTar(
@@ -96,7 +92,6 @@ async function run(): Promise<void> {
         );
       }
 
-      core.info(`adding ${kontrol} to path`);
       core.addPath(kontrol);
 
       core.endGroup();
