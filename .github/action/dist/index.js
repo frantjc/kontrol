@@ -103,13 +103,18 @@ function run() {
             let kontrol = "kontrol";
             if (core.getBooleanInput("install")) {
                 core.startGroup("install");
+                core.info(`looking for ${tool} in cache`);
                 // Look for kontrol in the cache.
                 let kontrol = tc.find(tool, versionOs);
                 // If we don't find kontrol in the cache, download, extract and cache it
                 // from its GitHub release.
                 if (!kontrol) {
+                    core.info(`${tool} not found in cache for ${versionOs}`);
+                    core.info(`downloading ${tool} for ${versionOs}`);
                     kontrol = yield tc.cacheFile(path_1.default.join(yield tc.extractTar(yield tc.downloadTool(`https://github.com/frantjc/kontrol/releases/download/v${version}/kontrol_${version}_${os}_${arch}.tar.gz`)), tool), tool, tool, versionOs);
                 }
+                core.info(`adding ${kontrol} to path`);
+                core.addPath(kontrol);
                 core.endGroup();
             }
             // Sanity check that kontrol was installed correctly.
