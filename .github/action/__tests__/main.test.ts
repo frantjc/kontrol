@@ -55,7 +55,6 @@ test("action", () => {
             ...env,
             INPUT_INSTALL: "true",
           },
-          stdio: "inherit",
         }
       )
       .toString()
