@@ -100,7 +100,7 @@ function run() {
                 throw new Error(`unsupported OS ${process.env.RUNNER_OS}`);
             }
             // Default to looking it up on PATH if install is explicitly set to false.
-            let kontrol = "";
+            let kontrol = "kontrol";
             if (core.getBooleanInput("install")) {
                 core.startGroup("install");
                 // Look for kontrol in the cache.
@@ -112,7 +112,6 @@ function run() {
                 }
                 core.endGroup();
             }
-            kontrol = path_1.default.join(kontrol, "kontrol");
             // Sanity check that kontrol was installed correctly.
             yield cp.exec(kontrol, ["-v"]);
         }

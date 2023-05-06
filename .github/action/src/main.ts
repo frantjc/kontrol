@@ -67,7 +67,7 @@ async function run(): Promise<void> {
     }
 
     // Default to looking it up on PATH if install is explicitly set to false.
-    let kontrol = "";
+    let kontrol = "kontrol";
     if (core.getBooleanInput("install")) {
       core.startGroup("install");
       // Look for kontrol in the cache.
@@ -93,8 +93,6 @@ async function run(): Promise<void> {
 
       core.endGroup();
     }
-
-    kontrol = path.join(kontrol, "kontrol");
 
     // Sanity check that kontrol was installed correctly.
     await cp.exec(kontrol, ["-v"]);
