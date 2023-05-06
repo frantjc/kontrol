@@ -43,7 +43,7 @@ afterEach(() => {
   fs.rmSync(env.RUNNER_TOOL_CACHE, { recursive: true });
 });
 
-test("action", () => {
+test("run install", () => {
   expect(
     cp
       .execFileSync(
