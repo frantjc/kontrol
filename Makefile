@@ -2,38 +2,57 @@ GO = go
 GIT = git
 GOLANGCI-LINT = golangci-lint
 GORELEASER = goreleaser
-INSTALL = sudo install
-DOCKER = docker
-DOCKER-COMPOSE = $(DOCKER) compose
 CONTROLLER-GEN = controller-gen
-KUBECTL = kubectl
-HELM = helm
+YARN = yarn
+INSTALL ?= sudo install
 
 BIN ?= /usr/local/bin
 
-SEMVER ?= 0.1.0
+GOOS = $(shell $(GO) env GOOS)
+GOARCH = $(shell $(GO) env GOARCH)
+
+SEMVER ?= 0.1.2
+
+.github/action:
+	@cd .github/action && $(YARN) all
 
 manifests:
 	@$(CONTROLLER-GEN) rbac:roleName=kontroller crd webhook paths="./..." output:dir=manifests
 	@$(CONTROLLER-GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
-fmt generate test:
+generate:
 	@$(GO) $@ ./...
 
-download tidy vendor verify:
+fmt test:
+	@$(GO) $@ ./...
+	@cd .github/action && $(YARN) $@
+
+download:
+	@$(GO) mod $@
+	@cd .github/action && $(YARN)
+
+tidy vendor verify:
 	@$(GO) mod $@
 
 lint:
 	@$(GOLANGCI-LINT) run --fix
 
-release:
-	@$(GIT) tag v$(SEMVER)
-	@$(GIT) push --tags
+MAJOR = $(word 1,$(subst ., ,$(SEMVER)))
+MINOR = $(word 2,$(subst ., ,$(SEMVER)))
 
+release:
+	@cd .github/action && \
+		$(YARN) version --new-version $(SEMVER)
+	@$(GIT) push
+	@$(GIT) tag -f v$(MAJOR)
+	@$(GIT) tag -f v$(MAJOR).$(MINOR)
+	@$(GIT) push --tags -f
+
+action: .github/action
 gen: generate
 dl: download
 ven: vendor
 ver: verify
 format: fmt
 
-.PHONY: build dl download fmt format gen generate lint manifests release test ven vendor ver verify
+.PHONY: .github/action action build dl download fmt format gen generate lint manifests release test ven vendor ver verify

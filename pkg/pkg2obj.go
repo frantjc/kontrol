@@ -41,6 +41,25 @@ func PackagingToObjects(ref, name, namespace string, packaging *Packaging) []cli
 			ObjectMeta: metadata,
 			Rules:      policyRules,
 		}
+		subjects = []rbacv1.Subject{
+			{
+				Kind:      rbacv1.ServiceAccountKind,
+				Name:      name,
+				Namespace: namespace,
+			},
+		}
+		roleBinding client.Object = &rbacv1.RoleBinding{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: rbacv1.SchemeGroupVersion.String(),
+				Kind:       "RoleBinding",
+			},
+			ObjectMeta: metadata,
+			RoleRef: rbacv1.RoleRef{
+				Kind: "Role",
+				Name: name,
+			},
+			Subjects: subjects,
+		}
 	)
 
 	if fn.Some(packaging.CustomResourceDefinitions, func(crd apiextensionsv1.CustomResourceDefinition, _ int) bool {
@@ -54,6 +73,34 @@ func PackagingToObjects(ref, name, namespace string, packaging *Packaging) []cli
 			ObjectMeta: metadata,
 			Rules:      policyRules,
 		}
+
+		roleBinding = &rbacv1.ClusterRoleBinding{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: rbacv1.SchemeGroupVersion.String(),
+				Kind:       "ClusterRoleBinding",
+			},
+			ObjectMeta: metadata,
+			RoleRef: rbacv1.RoleRef{
+				Kind: "ClusterRole",
+				Name: name,
+			},
+			Subjects: subjects,
+		}
+	}
+
+	if namespace != "" {
+		objs = append(
+			objs,
+			&corev1.Namespace{
+				TypeMeta: metav1.TypeMeta{
+					APIVersion: "v1",
+					Kind:       "Namespace",
+				},
+				ObjectMeta: metav1.ObjectMeta{
+					Name: namespace,
+				},
+			},
+		)
 	}
 
 	objs = append(
@@ -66,24 +113,7 @@ func PackagingToObjects(ref, name, namespace string, packaging *Packaging) []cli
 			},
 			ObjectMeta: metadata,
 		},
-		&rbacv1.ClusterRoleBinding{
-			TypeMeta: metav1.TypeMeta{
-				APIVersion: rbacv1.SchemeGroupVersion.String(),
-				Kind:       "ClusterRoleBinding",
-			},
-			ObjectMeta: metadata,
-			RoleRef: rbacv1.RoleRef{
-				Kind: "ClusterRole",
-				Name: name,
-			},
-			Subjects: []rbacv1.Subject{
-				{
-					Kind:      rbacv1.ServiceAccountKind,
-					Name:      name,
-					Namespace: namespace,
-				},
-			},
-		},
+		roleBinding,
 		&appsv1.Deployment{
 			TypeMeta: metav1.TypeMeta{
 				APIVersion: appsv1.SchemeGroupVersion.String(),
