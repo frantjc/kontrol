@@ -13,6 +13,14 @@ GOARCH = $(shell $(GO) env GOARCH)
 
 SEMVER ?= 0.1.2
 
+.DEFAULT: install
+
+install: build
+	@$(INSTALL) ./dist/forge_$(GOOS)_$(GOARCH)*/forge $(BIN)
+
+build:
+	@$(GORELEASER) release --snapshot --clean
+
 .github/action:
 	@cd .github/action && $(YARN) all
 
