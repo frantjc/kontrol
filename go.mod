@@ -13,11 +13,11 @@ require (
 	go.uber.org/zap v1.24.0
 	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k8s.io/api v0.26.4
+	k8s.io/api v0.27.1
 	k8s.io/apiextensions-apiserver v0.26.4
 	k8s.io/apimachinery v0.27.1
-	k8s.io/cli-runtime v0.26.4
-	k8s.io/client-go v0.26.4
+	k8s.io/cli-runtime v0.27.1
+	k8s.io/client-go v0.27.1
 	k8s.io/cri-api v0.26.4
 	sigs.k8s.io/controller-runtime v0.14.6
 )
@@ -65,7 +65,6 @@ require (
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
-	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/vbatts/tar-split v0.11.2 // indirect
