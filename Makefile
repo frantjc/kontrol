@@ -11,7 +11,7 @@ BIN ?= /usr/local/bin
 GOOS = $(shell $(GO) env GOOS)
 GOARCH = $(shell $(GO) env GOARCH)
 
-SEMVER ?= 0.1.4
+SEMVER ?= 0.1.5
 
 .DEFAULT: install
 
@@ -28,10 +28,10 @@ manifests:
 	@$(CONTROLLER-GEN) rbac:roleName=kontroller crd webhook paths="./..." output:dir=manifests
 	@$(CONTROLLER-GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
-generate:
+generate test:
 	@$(GO) $@ ./...
 
-fmt test:
+fmt:
 	@$(GO) $@ ./...
 	@cd .github/action && $(YARN) $@
 
