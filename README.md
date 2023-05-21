@@ -45,7 +45,7 @@ kontrol package your/tag \
 Apply your controller's manifests:
 
 ```sh
-kontrol deploy ghcr.io/frantjc/kontrol | kubectl apply -f -
+kontrol deploy your/tag | kubectl apply -f -
 ```
 
 ### Setup Kontrol
