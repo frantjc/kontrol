@@ -94,10 +94,9 @@ async function run(): Promise<void> {
         );
       }
 
-      core.info(dir);
       bin = path.join(dir, tool);
 
-      core.addPath(bin);
+      core.addPath(dir);
 
       core.endGroup();
     }

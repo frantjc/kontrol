@@ -110,9 +110,8 @@ function run() {
                 if (!dir) {
                     dir = yield tc.cacheFile(path_1.default.join(yield tc.extractTar(yield tc.downloadTool(`https://github.com/frantjc/${tool}/releases/download/v${version}/${tool}_${version}_${os}_${arch}.tar.gz`)), tool), tool, tool, versionOs);
                 }
-                core.info(dir);
                 bin = path_1.default.join(dir, tool);
-                core.addPath(bin);
+                core.addPath(dir);
                 core.endGroup();
             }
             // Sanity check that kontrol was installed correctly.

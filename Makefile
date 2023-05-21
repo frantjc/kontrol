@@ -11,12 +11,12 @@ BIN ?= /usr/local/bin
 GOOS = $(shell $(GO) env GOOS)
 GOARCH = $(shell $(GO) env GOARCH)
 
-SEMVER ?= 0.1.5
+SEMVER ?= 0.1.6
 
 .DEFAULT: install
 
 install: build
-	@$(INSTALL) ./dist/forge_$(GOOS)_$(GOARCH)*/forge $(BIN)
+	@$(INSTALL) ./dist/kontrol_$(GOOS)_$(GOARCH)*/kontrol $(BIN)
 
 build:
 	@$(GORELEASER) release --snapshot --clean

@@ -8,6 +8,12 @@ It doesn't reinvent the wheel; it intends to operate on the controller's image a
 
 From a [release](https://github.com/frantjc/kontrol/releases).
 
+Using `brew`:
+
+```sh
+brew install frantjc/tap/kontrol
+```
+
 From source:
 
 ```sh
