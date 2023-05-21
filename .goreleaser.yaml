@@ -32,11 +32,11 @@ archives:
   - id: kontrol
     builds:
       - kontrol
-    name_template: kontrol
+    name_template: kontrol_{{ .Version }}_{{ .Os }}_{{ .Arch }}
   - id: kontroller
     builds:
       - kontroller
-    name_template: kontroller
+    name_template: kontroller_{{ .Version }}_{{ .Os }}_{{ .Arch }}
 dockers:
   - image_templates:
       - ghcr.io/frantjc/kontrol:{{ .Version }}
