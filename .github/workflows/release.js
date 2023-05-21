@@ -37,48 +37,59 @@ const artifacts = JSON.parse(
 
 // We only want the images as that is all kontrol operates on
 artifacts.filter(artifact => artifact.type === "Docker Image").forEach(async artifact => {
-    await new Promise(resolve => {
-        // For each image built, package it with kontroller CRDs and roles
-        const kontrol = cp.spawn(
-            "kontrol",
-            [
-                "package",
-                artifact.name,
-                "--crds", path.join(__dirname, "../../manifests/frantj.cc_kontrollers.yaml"),
-                "--roles", path.join(__dirname, "../../manifests/role.yaml"),
-                "--port", "8080"
-            ],
-            {
-                stdio: 'inherit'
-            }
-        );
-
-        kontrol.on('exit', (code) => {
-            if (code > 0) {
-                process.exit(code);
+    try {
+        await new Promise((resolve, reject) => {
+            function onCpSpawnError(err) {
+                reject(err);
             }
 
-            // Wherever this runs, it will be running just after the images were built,
-            // so docker will be running, so the images will be cached in the docker
-            // daemon, so we need to push them manually.
-            const docker = cp.spawn(
-                "docker",
+            // For each image built, package it with kontroller CRDs and roles
+            const kontrol = cp.spawn(
+                "kontrol",
                 [
-                    "push",
-                    artifact.name
+                    "package",
+                    artifact.name,
+                    "--crds", path.join(__dirname, "../../manifests/frantj.cc_kontrollers.yaml"),
+                    "--roles", path.join(__dirname, "../../manifests/role.yaml"),
+                    "--port", "8080"
                 ],
                 {
                     stdio: 'inherit'
                 }
             );
 
-            docker.on('exit', (code) => {
+            kontrol.on('error', onCpSpawnError);
+            kontrol.on('exit', (code) => {
                 if (code > 0) {
                     process.exit(code);
                 }
 
-                resolve();
+                // Wherever this runs, it will be running just after the images were built,
+                // so docker will be running, so the images will be cached in the docker
+                // daemon, so we need to push them manually.
+                const docker = cp.spawn(
+                    "docker",
+                    [
+                        "push",
+                        artifact.name
+                    ],
+                    {
+                        stdio: 'inherit'
+                    }
+                );
+
+                docker.on('error', onCpSpawnError);
+                docker.on('exit', (code) => {
+                    if (code > 0) {
+                        process.exit(code);
+                    }
+
+                    resolve();
+                });
             });
         });
-    });
+    } catch (err) {
+        console.error(err?.message || err);
+        process.exit(1);
+    }
 });
