@@ -41,3 +41,16 @@ changelog:
       - Merge pull request
       - Merge remote-tracking branch
       - Merge branch
+brews:
+  - tap:
+      owner: frantjc
+      name: homebrew-tap
+    ids:
+      - kontrol
+    folder: Formula
+    skip_upload: auto
+    homepage:  https://github.com/frantjc/kontrol
+    description: Package and deploy Kubernetes controllers
+    license: MIT
+    test: |
+      system "#{bin}/kontrol --version"
