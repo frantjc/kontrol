@@ -28,6 +28,15 @@ builds:
     hooks:
       post:
         - upx {{ .Path }}
+archives:
+  - id: kontrol
+    builds:
+      - kontrol
+    name_template: kontrol
+  - id: kontroller
+    builds:
+      - kontroller
+    name_template: kontroller
 dockers:
   - image_templates:
       - ghcr.io/frantjc/kontrol:{{ .Version }}
