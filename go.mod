@@ -7,7 +7,7 @@ require (
 	github.com/frantjc/go-error-code v0.2.0
 	github.com/frantjc/go-fn v0.3.0
 	github.com/go-logr/logr v1.2.4
-	github.com/go-logr/zapr v1.2.3
+	github.com/go-logr/zapr v1.2.4
 	github.com/google/go-containerregistry v0.14.0
 	github.com/spf13/cobra v1.7.0
 	go.uber.org/zap v1.24.0
