@@ -23,70 +23,7 @@ func PackagingToObjects(ref, name, namespace string, packaging *Packaging) []cli
 		selectorLabels = map[string]string{
 			"app.kubernetes.io/name": name,
 		}
-		policyRules = append(
-			packaging.PolicyRules,
-			fn.Map(packaging.CustomResourceDefinitions, func(crd apiextensionsv1.CustomResourceDefinition, _ int) rbacv1.PolicyRule {
-				return rbacv1.PolicyRule{
-					Verbs:     []string{"*"},
-					APIGroups: []string{crd.Spec.Group},
-					Resources: []string{crd.Spec.Names.Kind},
-				}
-			})...,
-		)
-		role client.Object = &rbacv1.Role{
-			TypeMeta: metav1.TypeMeta{
-				APIVersion: rbacv1.SchemeGroupVersion.String(),
-				Kind:       "Role",
-			},
-			ObjectMeta: metadata,
-			Rules:      policyRules,
-		}
-		subjects = []rbacv1.Subject{
-			{
-				Kind:      rbacv1.ServiceAccountKind,
-				Name:      name,
-				Namespace: namespace,
-			},
-		}
-		roleBinding client.Object = &rbacv1.RoleBinding{
-			TypeMeta: metav1.TypeMeta{
-				APIVersion: rbacv1.SchemeGroupVersion.String(),
-				Kind:       "RoleBinding",
-			},
-			ObjectMeta: metadata,
-			RoleRef: rbacv1.RoleRef{
-				Kind: "Role",
-				Name: name,
-			},
-			Subjects: subjects,
-		}
 	)
-
-	if fn.Some(packaging.CustomResourceDefinitions, func(crd apiextensionsv1.CustomResourceDefinition, _ int) bool {
-		return crd.Spec.Scope != "Namespaced"
-	}) {
-		role = &rbacv1.ClusterRole{
-			TypeMeta: metav1.TypeMeta{
-				APIVersion: rbacv1.SchemeGroupVersion.String(),
-				Kind:       "ClusterRole",
-			},
-			ObjectMeta: metadata,
-			Rules:      policyRules,
-		}
-
-		roleBinding = &rbacv1.ClusterRoleBinding{
-			TypeMeta: metav1.TypeMeta{
-				APIVersion: rbacv1.SchemeGroupVersion.String(),
-				Kind:       "ClusterRoleBinding",
-			},
-			ObjectMeta: metadata,
-			RoleRef: rbacv1.RoleRef{
-				Kind: "ClusterRole",
-				Name: name,
-			},
-			Subjects: subjects,
-		}
-	}
 
 	if namespace != "" {
 		objs = append(
@@ -105,7 +42,41 @@ func PackagingToObjects(ref, name, namespace string, packaging *Packaging) []cli
 
 	objs = append(
 		objs,
-		role,
+		&rbacv1.ClusterRole{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: rbacv1.SchemeGroupVersion.String(),
+				Kind:       "ClusterRole",
+			},
+			ObjectMeta: metadata,
+			Rules:      append(
+				packaging.PolicyRules,
+				fn.Map(packaging.CustomResourceDefinitions, func(crd apiextensionsv1.CustomResourceDefinition, _ int) rbacv1.PolicyRule {
+					return rbacv1.PolicyRule{
+						Verbs:     []string{"*"},
+						APIGroups: []string{crd.Spec.Group},
+						Resources: []string{crd.Spec.Names.Plural},
+					}
+				})...,
+			),
+		},
+		&rbacv1.ClusterRoleBinding{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: rbacv1.SchemeGroupVersion.String(),
+				Kind:       "ClusterRoleBinding",
+			},
+			ObjectMeta: metadata,
+			RoleRef: rbacv1.RoleRef{
+				Kind: "ClusterRole",
+				Name: name,
+			},
+			Subjects: []rbacv1.Subject{
+				{
+					Kind:      rbacv1.ServiceAccountKind,
+					Name:      name,
+					Namespace: namespace,
+				},
+			},
+		},
 		&corev1.ServiceAccount{
 			TypeMeta: metav1.TypeMeta{
 				APIVersion: "v1",
@@ -113,7 +84,6 @@ func PackagingToObjects(ref, name, namespace string, packaging *Packaging) []cli
 			},
 			ObjectMeta: metadata,
 		},
-		roleBinding,
 		&appsv1.Deployment{
 			TypeMeta: metav1.TypeMeta{
 				APIVersion: appsv1.SchemeGroupVersion.String(),
