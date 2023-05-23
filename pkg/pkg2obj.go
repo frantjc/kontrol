@@ -130,6 +130,7 @@ func PackagingToObjects(ref, name, namespace string, packaging *Packaging) []cli
 						Labels: selectorLabels,
 					},
 					Spec: corev1.PodSpec{
+						ServiceAccountName: name,
 						Containers: []corev1.Container{
 							{
 								Name:  name,
