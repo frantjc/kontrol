@@ -25,7 +25,7 @@ build:
 	@cd .github/action && $(YARN) all
 
 manifests:
-	@$(CONTROLLER-GEN) rbac:roleName=kontroller crd webhook paths="./..." output:dir=manifests
+	@$(CONTROLLER-GEN) rbac:roleName=kontroller crd webhook paths="./..." output:dir=$@
 	@$(CONTROLLER-GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
 generate test:
