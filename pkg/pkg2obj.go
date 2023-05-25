@@ -48,7 +48,7 @@ func PackagingToObjects(ref, name, namespace string, packaging *Packaging) []cli
 				Kind:       "ClusterRole",
 			},
 			ObjectMeta: metadata,
-			Rules:      append(
+			Rules: append(
 				packaging.PolicyRules,
 				fn.Map(packaging.CustomResourceDefinitions, func(crd apiextensionsv1.CustomResourceDefinition, _ int) rbacv1.PolicyRule {
 					return rbacv1.PolicyRule{
