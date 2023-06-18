@@ -1,0 +1,7 @@
+package:
+  crds:
+    - manifests/frantj.cc_kontrollers.yaml
+  roles:
+    - manifests/role.yaml
+  ports:
+    - 8080
