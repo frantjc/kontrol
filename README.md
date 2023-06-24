@@ -59,5 +59,5 @@ kontrol deploy your/tag | kubectl apply -f -
 Install:
 
 ```yml
-  - uses: frantjc/kontrol@0.1
+  - uses: frantjc/kontrol@0.2
 ```
