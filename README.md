@@ -28,6 +28,12 @@ Using `go`:
 go install github.com/frantjc/kontrol/cmd/kontrol
 ```
 
+In GitHub Actions:
+
+```yml
+  - uses: frantjc/kontrol@0.2
+```
+
 ## usage
 
 ### Package
@@ -52,12 +58,4 @@ Apply your controller's manifests:
 
 ```sh
 kontrol deploy your/tag | kubectl apply -f -
-```
-
-### Setup Kontrol
-
-Install:
-
-```yml
-  - uses: frantjc/kontrol@0.2
 ```
