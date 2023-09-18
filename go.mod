@@ -10,7 +10,7 @@ require (
 	github.com/go-logr/zapr v1.2.4
 	github.com/google/go-containerregistry v0.16.1
 	github.com/spf13/cobra v1.7.0
-	go.uber.org/zap v1.25.0
+	go.uber.org/zap v1.26.0
 	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/api v0.28.1
